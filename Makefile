@@ -17,7 +17,7 @@ GOOGLE_WORKSPACE_SKILLS := \
 	gws-drive \
 	gws-sheets
 
-.PHONY: ai bootstrap mise-package mise-install
+.PHONY: ai bootstrap mise-package mise-install check
 .PHONY: agents-install agents agents-cli agents-skills agents-claude-plugins
 .PHONY: agents-skills-install agents-skills-list agents-skills-check-npx
 
@@ -25,6 +25,9 @@ ai: bootstrap
 	@$(MAKE) agents-install
 
 bootstrap: mise-package mise-install
+
+check:
+	@./scripts/test-setup.sh
 
 mise-package:
 	@set -e; \
