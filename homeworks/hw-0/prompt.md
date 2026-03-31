@@ -24,3 +24,15 @@ AGENST.md
 выполни пункт Создать Rails 8 приложение
 
 @.claude/memory/data-collection-plan.md
+
+
+---
+
+выполни пункт - [ ] Настроить тестовое окружение (RSpec, FactoryBot)
+
+@.claude/memory/data-collection-plan.md
+
+
+----
+
+приведи .gitignore в стандартный вид для rails

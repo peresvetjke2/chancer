@@ -4,7 +4,7 @@
 
 - [x] Создать Rails 8 приложение (`rails new chancer --database=postgresql`)
   - **Критерий:** `bin/rails s` запускается без ошибок, открывается стартовая страница
-- [ ] Настроить тестовое окружение (RSpec, FactoryBot)
+- [x] Настроить тестовое окружение (RSpec, FactoryBot)
   - **Критерий:** `bundle exec rspec` проходит на пустом проекте без ошибок
 - [ ] Подключить базу данных PostgreSQL
   - **Критерий:** `bin/rails db:create` выполняется успешно, базы `chancer_development` и `chancer_test` существуют
