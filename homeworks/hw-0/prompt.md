@@ -42,3 +42,9 @@ AGENST.md
 выполни пункт Подключить базу данных PostgreSQL
 
 @.claude/memory/data-collection-plan.md @PROJECT.md
+
+---
+
+последовательно выполни каждый пункт из ## Фаза 1 — Модели данных
+
+@chancer/PROJECT.md @chancer/.claude/memory/data-collection-plan.md
