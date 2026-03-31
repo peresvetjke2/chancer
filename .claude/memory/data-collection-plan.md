@@ -2,7 +2,7 @@
 
 ## Фаза 0 — Инициализация проекта
 
-- [ ] Создать Rails 8 приложение (`rails new chancer --database=postgresql`)
+- [x] Создать Rails 8 приложение (`rails new chancer --database=postgresql`)
   - **Критерий:** `bin/rails s` запускается без ошибок, открывается стартовая страница
 - [ ] Настроить тестовое окружение (RSpec, FactoryBot)
   - **Критерий:** `bundle exec rspec` проходит на пустом проекте без ошибок
