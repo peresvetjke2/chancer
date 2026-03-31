@@ -1,8 +1,0 @@
-  [1m[35mSQL (0.0ms)[0m  [1m[35mSET search_path TO public /*application='Chancer'*/[0m
-  [1m[35m (228.2ms)[0m  [1m[35mCREATE DATABASE "chancer_development" ENCODING = 'unicode' /*application='Chancer'*/[0m
-  [1m[35mSQL (0.0ms)[0m  [1m[35mSET search_path TO public /*application='Chancer'*/[0m
-  [1m[35m (63.4ms)[0m  [1m[35mCREATE DATABASE "chancer_test" ENCODING = 'unicode' /*application='Chancer'*/[0m
-  [1m[35m (7.5ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY) /*application='Chancer'*/[0m
-  [1m[35m (3.3ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL) /*application='Chancer'*/[0m
-  [1m[36mActiveRecord::SchemaMigration Load (1.6ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='Chancer'*/[0m
-  [1m[36mActiveRecord::SchemaMigration Load (0.7ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC /*application='Chancer'*/[0m

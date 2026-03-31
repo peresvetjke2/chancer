@@ -36,3 +36,9 @@ AGENST.md
 ----
 
 приведи .gitignore в стандартный вид для rails
+
+---
+
+выполни пункт Подключить базу данных PostgreSQL
+
+@.claude/memory/data-collection-plan.md @PROJECT.md
