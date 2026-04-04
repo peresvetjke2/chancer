@@ -1,5 +1,7 @@
 # Spec: Расширение данных PandaScore (задача 005)
 
+Related: [.claude/memory-bank/005/brief.md](.claude/memory-bank/005/brief.md)
+
 ## Цель
 
 Устранить пробелы в импорте PandaScore, которые блокируют аналитические задачи 007–009.
@@ -47,8 +49,8 @@ add_column :matches, :tournament_name,  :string    # вместо существ
 ```
 
 > `tournament` уже хранит строку — переименовываем в `tournament_name` для единообразия.
-> Существующую колонку не трогаем: добавляем `tournament_name` как новую,
-> `tournament` оставляем до следующей точки входа.
+> Существующую колонку не трогаем: добавляем `tournament_name` как новую.
+> Колонка `tournament` остаётся в схеме до завершения задач 007–009; удаление — отдельная задача после их мёржа.
 
 Маппинг из API:
 
@@ -125,7 +127,7 @@ add_index :players, :pandascore_id, unique: true
 3. После upsert команд — upsert игроков из `t["players"]`:
 
 ```ruby
-team = Team.find_by!(pandascore_id: t["id"])  # один запрос на команду, вне цикла
+team = Team.find_by!(pandascore_id: t["id"])  # один find_by per team, не внутри players-цикла
 Array(t["players"]).each do |p|
   Player.find_or_create_by(pandascore_id: p["id"]) do |player|
     player.name    = p["name"]
@@ -176,6 +178,9 @@ end
 
 ## Порядок реализации
 
+> Все изменения намеренно объединены в одну задачу: поля нужны задачам 007–009 одновременно,
+> и разбиение создаст зависимость между PR-ами. Альтернативный вариант — 005a/005b — не выбран.
+
 1. **Миграция** — все новые колонки: `teams` (`acronym`, `image_url`, `slug`), `matches` (новые поля включая `tournament_id`), `map_results` (`pandascore_id`, `winner_team_id`), `players` (`pandascore_id`).
 2. Обновить модели (`belongs_to`, `validates`).
 3. Обновить `TeamsImporter` + тесты.
@@ -201,6 +206,20 @@ end
 
 ---
 
+## Инварианты
+
+- `map_results.pandascore_id`: уникальный индекс, NOT NULL при создании через импорт (application-level; `null: false` на уровне БД не устанавливается).
+- `players.pandascore_id`: уникальный индекс, допускает NULL (для ручных записей).
+- `MapResult` создаётся даже если `score` вычислить невозможно (`score = nil`).
+
+## Транзакционность
+
+`TeamsImporter` не оборачивает upsert команд и создание игроков в одну транзакцию.
+Частичный успех (команды без игроков) допустим — повторный импорт доберёт игроков.
+
+Аналогично `MatchesImporter`: если создание `MapResult` упадёт, `Match` остаётся в БД.
+Частичный успех допустим — повторный импорт доберёт карты.
+
 ## Граничные случаи
 
 | Ситуация | Ожидаемое поведение |
@@ -213,3 +232,4 @@ end
 | `league` / `serie` = null | `league_id`, `league_name` и т.д. = nil |
 | Повторный импорт того же матча | `Match` upsert-ится; карты дедуплицируются по `pandascore_id` |
 | Два турнира с одинаковым `serie_name` | Различаются по `serie_id` |
+| `find_by!` после upsert не находит запись (`RecordNotFound`) | Исключение пробрасывается наверх; импорт прерывается |
