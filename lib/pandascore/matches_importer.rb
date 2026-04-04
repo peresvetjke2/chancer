@@ -46,11 +46,46 @@ module Pandascore
             { pandascore_id: match["id"], team1_id: team1.id, team2_id: team2.id,
               winner_id: winner&.id, score: score,
               tournament: match.dig("tournament", "name"),
-              played_at: match["end_at"] },
+              played_at: match["end_at"],
+              begin_at:        match["begin_at"],
+              end_at:          match["end_at"],
+              match_type:      match["match_type"],
+              status:          match["status"],
+              league_id:       match.dig("league", "id"),
+              league_name:     match.dig("league", "name"),
+              serie_id:        match.dig("serie", "id"),
+              serie_name:      match.dig("serie", "name"),
+              tournament_id:   match.dig("tournament", "id"),
+              tournament_name: match.dig("tournament", "name") },
             unique_by: :pandascore_id,
-            update_only: %i[team1_id team2_id winner_id score tournament played_at]
+            update_only: %i[team1_id team2_id winner_id score tournament played_at
+                            begin_at end_at match_type status
+                            league_id league_name serie_id serie_name
+                            tournament_id tournament_name]
           )
           count += 1
+
+          saved_match = Match.find_by!(pandascore_id: match["id"])
+
+          Array(match["games"]).each do |game|
+            next if game["map"].nil?
+            next if game["id"].nil?
+
+            winner_ps_id = game.dig("winner", "id")
+            winner_team  = winner_ps_id ? Team.find_by(pandascore_id: winner_ps_id) : nil
+
+            game_results = game["results"] || []
+            gr1   = game_results.find { |r| r["team_id"] == match.dig("opponents", 0, "opponent", "id") }
+            gr2   = game_results.find { |r| r["team_id"] == match.dig("opponents", 1, "opponent", "id") }
+            score = (gr1 && gr2) ? "#{gr1["score"]}-#{gr2["score"]}" : nil
+
+            MapResult.find_or_create_by(pandascore_id: game["id"]) do |mr|
+              mr.match_id       = saved_match.id
+              mr.map_name       = game.dig("map", "name")
+              mr.score          = score
+              mr.winner_team_id = winner_team&.id
+            end
+          end
         end
       end
 

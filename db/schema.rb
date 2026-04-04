@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_04_171242) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_05_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -18,20 +18,34 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_04_171242) do
     t.datetime "created_at", null: false
     t.string "map_name"
     t.bigint "match_id", null: false
+    t.integer "pandascore_id"
     t.string "score"
     t.datetime "updated_at", null: false
+    t.bigint "winner_team_id"
     t.index ["match_id"], name: "index_map_results_on_match_id"
+    t.index ["pandascore_id"], name: "index_map_results_on_pandascore_id", unique: true
+    t.index ["winner_team_id"], name: "index_map_results_on_winner_team_id"
   end
 
   create_table "matches", force: :cascade do |t|
+    t.datetime "begin_at"
     t.datetime "created_at", null: false
+    t.datetime "end_at"
     t.integer "hltv_id"
+    t.bigint "league_id"
+    t.string "league_name"
+    t.string "match_type"
     t.integer "pandascore_id"
     t.datetime "played_at"
     t.string "score"
+    t.bigint "serie_id"
+    t.string "serie_name"
+    t.string "status"
     t.bigint "team1_id", null: false
     t.bigint "team2_id", null: false
     t.string "tournament"
+    t.bigint "tournament_id"
+    t.string "tournament_name"
     t.datetime "updated_at", null: false
     t.bigint "winner_id"
     t.index ["hltv_id"], name: "index_matches_on_hltv_id", unique: true
@@ -64,26 +78,32 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_04_171242) do
   create_table "players", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "name"
+    t.integer "pandascore_id"
     t.string "role"
     t.bigint "team_id", null: false
     t.datetime "updated_at", null: false
+    t.index ["pandascore_id"], name: "index_players_on_pandascore_id", unique: true
     t.index ["team_id"], name: "index_players_on_team_id"
   end
 
   create_table "teams", force: :cascade do |t|
+    t.string "acronym"
     t.datetime "created_at", null: false
     t.integer "hltv_id"
     t.integer "hltv_rank"
+    t.string "image_url"
     t.string "name"
     t.integer "pandascore_id"
     t.integer "pandascore_rank"
     t.string "region"
+    t.string "slug"
     t.datetime "updated_at", null: false
     t.index ["hltv_id"], name: "index_teams_on_hltv_id", unique: true
     t.index ["pandascore_id"], name: "index_teams_on_pandascore_id", unique: true
   end
 
   add_foreign_key "map_results", "matches"
+  add_foreign_key "map_results", "teams", column: "winner_team_id"
   add_foreign_key "matches", "teams", column: "team1_id"
   add_foreign_key "matches", "teams", column: "team2_id"
   add_foreign_key "matches", "teams", column: "winner_id"
