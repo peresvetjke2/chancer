@@ -15,7 +15,7 @@ module Pandascore
         @http.get(path, params)
       else
         uri = URI("#{BASE_URL}#{path}")
-        uri.query = URI.encode_www_form(params) unless params.empty?
+        uri.query = URI.encode_www_form(params).gsub("%5B", "[").gsub("%5D", "]") unless params.empty?
 
         request = Net::HTTP::Get.new(uri)
         request["Authorization"] = "Bearer #{@token}"
@@ -23,6 +23,7 @@ module Pandascore
         response = Net::HTTP.start(uri.host, uri.port, use_ssl: true) do |http|
           http.request(request)
         end
+        binding.irb
 
         sleep 1
 
