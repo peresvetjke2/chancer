@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_31_205040) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_04_171242) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -25,6 +25,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_31_205040) do
 
   create_table "matches", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.integer "hltv_id"
+    t.integer "pandascore_id"
     t.datetime "played_at"
     t.string "score"
     t.bigint "team1_id", null: false
@@ -32,6 +34,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_31_205040) do
     t.string "tournament"
     t.datetime "updated_at", null: false
     t.bigint "winner_id"
+    t.index ["hltv_id"], name: "index_matches_on_hltv_id", unique: true
+    t.index ["pandascore_id"], name: "index_matches_on_pandascore_id", unique: true
     t.index ["team1_id"], name: "index_matches_on_team1_id"
     t.index ["team2_id"], name: "index_matches_on_team2_id"
     t.index ["winner_id"], name: "index_matches_on_winner_id"
@@ -71,9 +75,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_31_205040) do
     t.integer "hltv_id"
     t.integer "hltv_rank"
     t.string "name"
+    t.integer "pandascore_id"
+    t.integer "pandascore_rank"
     t.string "region"
     t.datetime "updated_at", null: false
     t.index ["hltv_id"], name: "index_teams_on_hltv_id", unique: true
+    t.index ["pandascore_id"], name: "index_teams_on_pandascore_id", unique: true
   end
 
   add_foreign_key "map_results", "matches"

@@ -9,8 +9,8 @@ RSpec.describe Team, type: :model do
     expect(build(:team, name: nil)).not_to be_valid
   end
 
-  it "is invalid without hltv_id" do
-    expect(build(:team, hltv_id: nil)).not_to be_valid
+  it "is valid without hltv_id" do
+    expect(build(:team, hltv_id: nil)).to be_valid
   end
 
   it "is invalid with duplicate hltv_id" do
