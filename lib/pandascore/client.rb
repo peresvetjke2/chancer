@@ -23,7 +23,6 @@ module Pandascore
         response = Net::HTTP.start(uri.host, uri.port, use_ssl: true) do |http|
           http.request(request)
         end
-        binding.irb
 
         sleep 1
 
