@@ -47,3 +47,4 @@
 *.swo
 
 .obsidian/
+/coverage/
