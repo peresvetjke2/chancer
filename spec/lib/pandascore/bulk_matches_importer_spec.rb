@@ -57,7 +57,7 @@ RSpec.describe Pandascore::BulkMatchesImporter do
 
     it "возвращает уникальные team_ids всех участников" do
       result = call_importer
-      expect(result).to match_array([101, 202, 303, 404])
+      expect(result).to match_array([ 101, 202, 303, 404 ])
     end
   end
 
@@ -113,7 +113,7 @@ RSpec.describe Pandascore::BulkMatchesImporter do
 
     it "возвращает только уникальные id" do
       result = call_importer
-      expect(result).to match_array([101, 202])
+      expect(result).to match_array([ 101, 202 ])
     end
   end
 
@@ -121,7 +121,7 @@ RSpec.describe Pandascore::BulkMatchesImporter do
   context "AC-4: opponents < 2" do
     let(:bad_match) do
       { "id" => 999, "end_at" => "2026-02-01T12:00:00Z",
-        "opponents" => [{ "opponent" => { "id" => 101, "name" => "Team A" } }],
+        "opponents" => [ { "opponent" => { "id" => 101, "name" => "Team A" } } ],
         "winner" => nil, "results" => [], "games" => [],
         "tournament" => nil, "league" => nil, "serie" => nil }
     end
@@ -129,7 +129,7 @@ RSpec.describe Pandascore::BulkMatchesImporter do
     before do
       allow(client).to receive(:get)
         .with("/csgo/matches/past", hash_including("page[number]" => 1))
-        .and_return([bad_match])
+        .and_return([ bad_match ])
       allow(client).to receive(:get)
         .with("/csgo/matches/past", hash_including("page[number]" => 2))
         .and_return([])
@@ -146,7 +146,7 @@ RSpec.describe Pandascore::BulkMatchesImporter do
     before do
       allow(client).to receive(:get)
         .with("/csgo/matches/past", hash_including("page[number]" => 1))
-        .and_return([build_match(id: 1, team1_id: 101, team2_id: 202, end_at: nil)])
+        .and_return([ build_match(id: 1, team1_id: 101, team2_id: 202, end_at: nil) ])
       allow(client).to receive(:get)
         .with("/csgo/matches/past", hash_including("page[number]" => 2))
         .and_return([])
@@ -164,8 +164,8 @@ RSpec.describe Pandascore::BulkMatchesImporter do
       games = [
         { "id" => 501, "map" => { "name" => "Mirage" },
           "winner" => { "id" => 101 },
-          "results" => [{ "team_id" => 101, "score" => 16 },
-                        { "team_id" => 202, "score" => 9 }] }
+          "results" => [ { "team_id" => 101, "score" => 16 },
+                        { "team_id" => 202, "score" => 9 } ] }
       ]
       build_match(id: 1, team1_id: 101, team2_id: 202, games: games)
     end
@@ -173,7 +173,7 @@ RSpec.describe Pandascore::BulkMatchesImporter do
     before do
       allow(client).to receive(:get)
         .with("/csgo/matches/past", hash_including("page[number]" => 1))
-        .and_return([match_with_game])
+        .and_return([ match_with_game ])
       allow(client).to receive(:get)
         .with("/csgo/matches/past", hash_including("page[number]" => 2))
         .and_return([])
@@ -196,12 +196,12 @@ RSpec.describe Pandascore::BulkMatchesImporter do
       [
         { "id" => 601, "map" => { "name" => "Mirage" },
           "winner" => { "id" => 101 },
-          "results" => [{ "team_id" => 101, "score" => 16 },
-                        { "team_id" => 202, "score" => 9 }] },
+          "results" => [ { "team_id" => 101, "score" => 16 },
+                        { "team_id" => 202, "score" => 9 } ] },
         { "id" => 602, "map" => { "name" => "Inferno" },
           "winner" => { "id" => 202 },
-          "results" => [{ "team_id" => 101, "score" => 10 },
-                        { "team_id" => 202, "score" => 16 }] },
+          "results" => [ { "team_id" => 101, "score" => 10 },
+                        { "team_id" => 202, "score" => 16 } ] },
         { "id" => 603, "map" => nil, "winner" => nil, "results" => [] }
       ]
     end
@@ -209,7 +209,7 @@ RSpec.describe Pandascore::BulkMatchesImporter do
     before do
       allow(client).to receive(:get)
         .with("/csgo/matches/past", hash_including("page[number]" => 1))
-        .and_return([build_match(id: 1, team1_id: 101, team2_id: 202, games: games)])
+        .and_return([ build_match(id: 1, team1_id: 101, team2_id: 202, games: games) ])
       allow(client).to receive(:get)
         .with("/csgo/matches/past", hash_including("page[number]" => 2))
         .and_return([])

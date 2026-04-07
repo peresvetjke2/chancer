@@ -38,14 +38,14 @@ RSpec.describe Pandascore::MatchesImporter do
     let(:team) { teams.first }
     let(:bad_match) do
       { "id" => 999, "end_at" => "2026-04-01T12:00:00Z",
-        "opponents" => [{ "opponent" => { "id" => team.pandascore_id, "name" => team.name } }],
+        "opponents" => [ { "opponent" => { "id" => team.pandascore_id, "name" => team.name } } ],
         "winner" => nil, "results" => [], "tournament" => nil }
     end
 
     before do
       allow(client).to receive(:get)
         .with("/csgo/matches/past", hash_including("filter[opponent_id]": team.pandascore_id))
-        .and_return([bad_match])
+        .and_return([ bad_match ])
     end
 
     it "skips the match without raising" do
@@ -62,7 +62,7 @@ RSpec.describe Pandascore::MatchesImporter do
       match = build_match(id: 1, team1: t1, team2: t2, winner: nil)
       allow(client).to receive(:get)
         .with("/csgo/matches/past", hash_including("filter[opponent_id]": t1.pandascore_id))
-        .and_return([match])
+        .and_return([ match ])
     end
 
     it "saves the match with winner_id nil" do
@@ -79,7 +79,7 @@ RSpec.describe Pandascore::MatchesImporter do
       match = build_match(id: 2, team1: team, team2: teams[1], end_at: nil)
       allow(client).to receive(:get)
         .with("/csgo/matches/past", hash_including("filter[opponent_id]": team.pandascore_id))
-        .and_return([match])
+        .and_return([ match ])
     end
 
     it "skips the match without raising" do
@@ -96,7 +96,7 @@ RSpec.describe Pandascore::MatchesImporter do
       match = build_match(id: 10, team1: t1, team2: t2)
       allow(client).to receive(:get)
         .with("/csgo/matches/past", hash_including("filter[opponent_id]": t1.pandascore_id))
-        .and_return([match])
+        .and_return([ match ])
     end
 
     it "does not create duplicate matches on repeated runs" do
@@ -122,7 +122,7 @@ RSpec.describe Pandascore::MatchesImporter do
       )
       allow(client).to receive(:get)
         .with("/csgo/matches/past", hash_including("filter[opponent_id]": top_team.pandascore_id))
-        .and_return([match])
+        .and_return([ match ])
     end
 
     it "creates a minimal team record for the unknown opponent" do
@@ -140,12 +140,12 @@ RSpec.describe Pandascore::MatchesImporter do
       [
         { "id" => 301, "map" => { "name" => "Mirage" },
           "winner" => { "id" => t1.pandascore_id },
-          "results" => [{ "team_id" => t1.pandascore_id, "score" => 16 },
-                        { "team_id" => t2.pandascore_id, "score" => 9 }] },
+          "results" => [ { "team_id" => t1.pandascore_id, "score" => 16 },
+                        { "team_id" => t2.pandascore_id, "score" => 9 } ] },
         { "id" => 302, "map" => { "name" => "Inferno" },
           "winner" => { "id" => t1.pandascore_id },
-          "results" => [{ "team_id" => t1.pandascore_id, "score" => 16 },
-                        { "team_id" => t2.pandascore_id, "score" => 14 }] },
+          "results" => [ { "team_id" => t1.pandascore_id, "score" => 16 },
+                        { "team_id" => t2.pandascore_id, "score" => 14 } ] },
         { "id" => nil, "map" => nil, "winner" => nil, "results" => [] }
       ]
     end
@@ -154,7 +154,7 @@ RSpec.describe Pandascore::MatchesImporter do
       match = build_match(id: 50, team1: t1, team2: t2, games: games)
       allow(client).to receive(:get)
         .with("/csgo/matches/past", hash_including("filter[opponent_id]": t1.pandascore_id))
-        .and_return([match])
+        .and_return([ match ])
     end
 
     it "saves новые поля матча" do

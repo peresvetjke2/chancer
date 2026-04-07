@@ -1,6 +1,6 @@
 namespace :pandascore do
   desc "Bulk-import CS2 match history for the last N months (default: 3)"
-  task :import_history, [:months] => :environment do |_, args|
+  task :import_history, [ :months ] => :environment do |_, args|
     months = (args[:months] || 3).to_i
     token  = ENV["PANDASCORE_API_TOKEN"]
     abort "PANDASCORE_API_TOKEN is not set" if token.blank?

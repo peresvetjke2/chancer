@@ -30,7 +30,7 @@ RSpec.describe Scrapers::Hltv::Teams do
 
     it "returns first N teams in rank order" do
       result = described_class.call(limit: 2)
-      expect(result.map { |t| t[:hltv_rank] }).to eq([1, 2])
+      expect(result.map { |t| t[:hltv_rank] }).to eq([ 1, 2 ])
     end
   end
 

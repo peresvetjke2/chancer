@@ -8,7 +8,7 @@ RSpec.describe Pandascore::Client do
       let(:fake_http) do
         Class.new do
           def get(path, params)
-            [{ "id" => 1, "name" => "Natus Vincere" }]
+            [ { "id" => 1, "name" => "Natus Vincere" } ]
           end
         end.new
       end
@@ -16,12 +16,12 @@ RSpec.describe Pandascore::Client do
       it "delegates to the injected http object" do
         client = described_class.new(token: token, http: fake_http)
         result = client.get("/csgo/teams", sort: "ranking")
-        expect(result).to eq([{ "id" => 1, "name" => "Natus Vincere" }])
+        expect(result).to eq([ { "id" => 1, "name" => "Natus Vincere" } ])
       end
     end
 
     context "with real Net::HTTP" do
-      let(:response_body) { [{ "id" => 1 }].to_json }
+      let(:response_body) { [ { "id" => 1 } ].to_json }
 
       let(:fake_response) do
         instance_double(Net::HTTPOK, is_a?: true, body: response_body).tap do |r|
@@ -41,7 +41,7 @@ RSpec.describe Pandascore::Client do
           fake_response
         end
         result = client.get("/csgo/teams")
-        expect(result).to eq([{ "id" => 1 }])
+        expect(result).to eq([ { "id" => 1 } ])
       end
 
       context "when response is non-2xx" do
