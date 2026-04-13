@@ -1,26 +1,25 @@
-# README
+# Chancer
 
 [![Ruby on Rails CI](https://github.com/peresvetjke2/chancer/actions/workflows/rubyonrails.yml/badge.svg)](https://github.com/peresvetjke2/chancer/actions/workflows/rubyonrails.yml)
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+AI-powered prediction assistant for esports betting. Collects match history, team stats, and news — then generates forecasts with confidence scores.
 
-Things you may want to cover:
+## Stack
 
-* Ruby version
+- Ruby on Rails 8
+- PostgreSQL 15
+- RSpec
 
-* System dependencies
+## Setup
 
-* Configuration
+```bash
+bin/setup
+bin/rails db:migrate
+bin/rails s
+```
 
-* Database creation
+## Tests
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+```bash
+bundle exec rspec
+```
