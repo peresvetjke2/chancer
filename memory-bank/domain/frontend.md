@@ -2,68 +2,52 @@
 title: Frontend
 doc_kind: domain
 doc_function: canonical
-purpose: Шаблон описания UI-поверхностей, design system и i18n-слоя. Читать при работе с web, mobile или internal UI.
+purpose: Описание UI-поверхностей, стека и соглашений по frontend. Читать при работе с web-интерфейсом.
 derived_from:
   - ../dna/governance.md
+  - problem.md
 status: active
 audience: humans_and_agents
 ---
 
 # Frontend
 
-Этот документ должен описывать реальные UI-поверхности downstream-проекта. Если в системе нет отдельного frontend-слоя, сократи документ до минимально полезного набора правил.
-
 ## UI Surfaces
 
-Опиши основные интерфейсы системы.
+Единственная поверхность — web-приложение:
 
-Пример:
+- **Чат-интерфейс** — свободные запросы пользователя на естественном языке, ответы от AI-помощника.
+- **Лента матчей** — список предстоящих матчей CS2 с быстрым прогнозом.
 
-- public web;
-- internal backoffice;
-- mobile app;
-- embedded widgets;
-- shared component library.
+Код:
 
-Для каждой поверхности полезно зафиксировать:
+- Views: `app/views/`
+- JavaScript: `app/javascript/`
+- Стили: `app/assets/stylesheets/`
 
-- где лежит код;
-- какой стек используется;
-- где проходит boundary с backend;
-- что считается canonical owner для design decisions.
+Backend boundary: Rails-контроллеры, обычный HTTP-цикл запрос/ответ.
+
+Авторизация пользователей вне scope (`PCON-01`).
 
 ## Component And Styling Rules
 
-Опиши проектные правила по UI-компонентам:
+Design system отсутствует. CSS-фреймворк не используется.
 
-- используется ли единая design system;
-- где живут shared components;
-- можно ли создавать ad hoc UI без общего компонента;
-- какой слой владеет токенами темы, spacing, typography и states.
-
-Пример записи:
-
-- новые UI-элементы сначала ищут место в `packages/ui`;
-- локальный CSS допустим только внутри feature boundary;
-- сложная интерактивность требует ADR или явного архитектурного решения.
+- Стили — в `app/assets/stylesheets/application.css`.
+- JavaScript-поведение — Stimulus-контроллеры в `app/javascript/controllers/`.
+- Ad hoc CSS допустим; отдельные файлы по стилям не регламентированы на текущем этапе.
 
 ## Interaction Patterns
 
-Опиши здесь canonical pattern для интерактивности: server-rendered UI, SPA, islands, HTMX/Turbo-like подход, native mobile и т.д.
+Stack: Rails ERB + Hotwire (Turbo + Stimulus) + importmap.
 
-Вместо project-specific выбора можно использовать шаблонную формулировку:
+Чат реализован максимально просто: стандартный HTTP form submit, ответ — перерисовка страницы через Turbo. Real-time (Turbo Streams, WebSocket) не используется.
 
-- для новых feature используй текущий основной interactive stack;
-- не смешивай два конкурирующих паттерна без явного основания;
-- если проект живет в переходном состоянии между стеками, зафиксируй migration rule и allowed exceptions.
+Правила:
+
+- Новые интерактивные элементы строятся на Stimulus; не вводить альтернативный JS-фреймворк без явного решения.
+- Bundler не используется — только importmap; новые npm-пакеты добавляются только по согласованию.
 
 ## Localization
 
-Документируй:
-
-- откуда берутся переводы;
-- как они попадают в UI;
-- где кэшируются или versionируются;
-- как добавлять новые ключи и кто владеет fallback behavior.
-
-Если в проекте есть несколько источников переводов, зафиксируй приоритеты и merge order.
+Локализация вне scope. Интерфейс — только на русском языке. i18n-инфраструктура не подключена.

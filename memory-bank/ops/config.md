@@ -15,15 +15,7 @@ audience: humans_and_agents
 
 ## Configuration Architecture
 
-Опиши реальную модель конфигурации проекта.
-
-Примеры:
-
-- typed config class;
-- `.env` + runtime env vars;
-- YAML/JSON/TOML файлы с environment overlays;
-- secret manager;
-- Helm values / Terraform variables / deployment manifests.
+- `.env.local` + runtime env vars;
 
 ### File Layout
 

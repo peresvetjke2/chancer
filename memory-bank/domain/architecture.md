@@ -1,3 +1,4 @@
+
 ---
 title: Architecture Patterns
 doc_kind: domain
@@ -11,70 +12,63 @@ audience: humans_and_agents
 
 # Architecture Patterns
 
-Этот документ задает не конкретную реализацию, а ожидаемые архитектурные правила проекта. Подставь сюда реальные bounded contexts, integration boundaries и технические ограничения downstream-системы.
-
 ## Module Boundaries
-
-Зафиксируй здесь главные изолированные области системы.
-
-Пример:
 
 | Context | Owns | Must not depend on directly |
 | --- | --- | --- |
-| `customer-facing` | пользовательский путь, публичные API | внутренние админские детали |
-| `operations` | backoffice, ручные действия, moderation | приватные внутренности billing/storage |
-| `platform` | shared services, auth, delivery infrastructure | product-specific UI assumptions |
+| `lib/pandascore` | HTTP-клиент, importers — вся логика взаимодействия с PandaScore API | AR-модели напрямую, кроме как через явные upsert-методы |
+| `app/models` | AR-схема, валидации, ассоциации | детали внешних API, HTTP |
+| `lib/tasks` | Rake-точки входа (CLI-интерфейс для импорта) | бизнес-логику; только вызывают importer и печатают результат |
+| `app/jobs` | фоновые задачи (пока пустые) | не используются для синхронного импорта |
+| `lib/scrapers` | HLTV-скраппер (на паузе) | PandaScore-слой |
 
-Минимальные правила:
+Правила:
 
-- модуль владеет своим state и публичными контрактами;
-- межмодульные зависимости проходят через явно названный API, event или adapter;
-- UI, jobs и интеграции не должны читать чужие внутренние детали в обход owner-модуля.
+- `Pandascore::Client` — единственная точка HTTP-взаимодействия с PandaScore; другие классы не делают HTTP-запросы самостоятельно.
+- Importers получают инстанс `Client` через конструктор (`client:` kwarg) — зависимость явная, инъецируемая (упрощает тест).
+- Rake-задачи только вызывают importer и выводят итог; никакой логики внутри.
 
 ## Concurrency And Critical Sections
 
-Если проект содержит конкурентные операции, зафиксируй canonical pattern для критических секций и фона.
+На старте импорт запускается вручную через Rake (`rails pandascore:import`, `rails pandascore:import_history`). Фоновые задачи (Solid Queue) пока не задействованы.
 
-Пример:
+**Текущий rate-limit pattern:**
 
 ```ruby
-ResourceLock.with_lock(resource_key) do
-  # критическая секция
-end
+# Pandascore::Client#get — после каждого HTTP-запроса:
+sleep 1
 ```
 
-Укажи явно:
+Это единственный concurrency control на текущем этапе. Цель — не превысить лимит PandaScore (1 000 req/час на бесплатном плане).
 
-- какой locking pattern разрешен;
-- какой pattern запрещен и почему;
-- что считается idempotent recovery;
-- где проходят границы транзакции относительно внешних API.
+Правила:
 
-Если проект использует job queue, добавь canonical правило для concurrency control.
+- `sleep 1` после каждого запроса — канонический паттерн; не убирать без явного решения.
+- Параллельный импорт из нескольких потоков не предусмотрен и не безопасен без дополнительного rate-limiting.
+- Транзакция БД не оборачивает HTTP-запросы: upsert-ы атомарны на уровне отдельной записи (`unique_by: :pandascore_id`).
 
 ## Failure Handling And Error Tracking
 
-Зафиксируй единый подход:
+**HTTP-слой:** `Pandascore::Client` логирует ошибку и поднимает `Pandascore::Error` при любом не-2xx ответе. Retry на уровне клиента отсутствует — повторный запуск Rake-задачи идемпотентен (upsert по `pandascore_id`).
 
-- где ошибки поднимаются наверх, а где переводятся в domain verdict;
-- как добавляется contextual metadata для error tracker;
-- где retry policy уже реализована инфраструктурно и ее нельзя дублировать локальным `rescue`.
+**Importers:**
 
-Пример вопроса, на который должен отвечать этот раздел:
+- `BulkMatchesImporter` и `MatchesImporter` пропускают (skip + log) отдельные матчи с `opponents < 2` или `end_at: nil` — продолжают цикл, не прерывают весь импорт.
+- `MapResult` создаётся через `find_or_create_by(pandascore_id:)` — идемпотентно при повторном запуске.
+- Ошибки не перехватываются внутри importers — поднимаются наверх в Rake-задачу и выводятся стандартно Rails.
 
-> Нужно ли вручную логировать ошибку в job, если базовый job class уже делает retries и нотификацию?
+**Правило:** не добавлять локальный `rescue` в importer, если единственная цель — подавить ошибку. Idempotency обеспечивается upsert-стратегией, а не retry-логикой.
 
 ## Configuration Ownership
 
-Документируй не все переменные окружения подряд, а ownership-модель конфигурации:
+**Schema owner:** `Pandascore::Client` — единственное место, где читается `PANDASCORE_API_TOKEN`.
 
-- где живет canonical schema конфигурации;
-- какие файлы или классы считаются owner-слоем;
-- где задаются defaults;
-- кто отвечает за документацию env contract.
+**Точка входа:** Rake-задачи проверяют наличие токена явно (`abort ... if token.blank?`) и передают его в `Client.new(token:)`.
 
-Пример:
+**Defaults и env:** `.env`-файл (через `dotenv-rails`); `ENV["PANDASCORE_API_TOKEN"]` — единственная обязательная переменная для импорта.
 
-1. Обновить schema-owner конфигурации.
-2. Обновить default values или environment overlays.
+Шаги при добавлении новой конфигурации:
+
+1. Добавить переменную в `.env` (и обновить `.env.example`, если есть).
+2. Прочитать в Rake-задаче или инициализаторе; передать через конструктор — не читать `ENV` внутри lib-классов напрямую.
 3. Обновить [`../ops/config.md`](../ops/config.md).

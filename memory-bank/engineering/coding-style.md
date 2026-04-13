@@ -20,19 +20,11 @@ audience: humans_and_agents
 
 ## Tooling Contract
 
-Зафиксируй здесь canonical formatting/linting toolchain.
-
-Пример:
-
-- formatter: `prettier`, `ruff format`, `rubocop -A`, `gofmt`
-- linter: `eslint`, `ruff`, `rubocop`, `golangci-lint`
-- pre-commit hooks: optional, но если они canonical, это должно быть явно сказано
+- formatter: `rubocop -A`
+- linter: `rubocop`
+- pre-commit hooks: none
 
 ## Language-Specific Addendum
-
-После адаптации добавь реальные правила для языков проекта.
-
-Пример структуры:
 
 - `Backend`: naming, error handling, module layout, typing policy
 - `Frontend`: component boundaries, state management, styling rules

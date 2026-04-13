@@ -2,7 +2,7 @@
 title: Testing Policy
 doc_kind: engineering
 doc_function: canonical
-purpose: Описывает testing policy репозитория: обязательность test case design, требования к automated regression coverage и допустимые manual-only gaps.
+purpose: Описывает testing policy репозитория - обязательность test case design, требования к automated regression coverage и допустимые manual-only gaps.
 derived_from:
   - ../dna/governance.md
   - ../flows/feature-flow.md
@@ -25,20 +25,10 @@ audience: humans_and_agents
 
 ## Project Adaptation
 
-После копирования шаблона заполни project-specific часть testing stack:
-
-- основной test framework;
-- стратегия тестовых данных;
-- canonical local commands;
-- обязательные CI jobs;
-- допустимые manual-only исключения.
-
-Пример формулировок:
-
-- **Framework:** `pytest`, `rspec`, `go test`, `vitest`
+- **Framework:** `rspec`
 - **Data:** fixtures / factories / builders / seeded test database
-- **Local commands:** `make test`, `npm test`, `bundle exec rspec`
-- **CI jobs:** `unit`, `integration`, `e2e`
+- **Local commands:** `bundle exec rspec`
+- **CI jobs:** `unit`, `integration`
 
 ## Core Rules
 
@@ -95,16 +85,7 @@ Canonical lifecycle gates живут в [../flows/feature-flow.md](../flows/feat
 
 ## Project-Specific Conventions
 
-Ниже должен появиться downstream-specific блок после адаптации шаблона. Зафиксируй:
-
-- куда добавлять новые тесты;
-- какой helper/setup pattern считается canonical;
-- как работать с базой, моками и fixtures;
-- какие команды обязан прогонять агент перед handoff.
-
-Пример:
-
-- новые unit tests живут в `tests/unit/` или `spec/`;
+- новые unit tests живут в `spec/`;
 - integration tests обязаны покрывать changed contract;
 - для дорогого setup использовать shared fixtures или builders;
 - текстовые assertions не дублируют hardcoded UI-копию, если проект уже владеет переводами централизованно.
