@@ -14,3 +14,4 @@ audience: humans_and_agents
 - [Project Problem Statement](problem.md) — общий продуктовый контекст и top-level outcomes проекта. Не заменяет PRD, а служит upstream-слоем для него и для feature-спек.
 - [Architecture Patterns](architecture.md) — границы модулей, асинхронные процессы, обработка ошибок и ownership конфигурации. Читать при изменении системного поведения.
 - [Frontend](frontend.md) — шаблон описания UI-поверхностей, design system и i18n-слоя. Читать при работе с интерфейсом.
+- [Prediction Signals](prediction-signals.md) — каталог сигналов модели прогнозирования: внешние факторы, данные игрока, карты, команды, матча и ставок. Читать при feature-extraction и scoring-логики.
