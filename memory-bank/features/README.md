@@ -26,3 +26,9 @@ audience: humans_and_agents
 - Базовый формат: `FT-XXX/`
 - Вместо `XXX` используй идентификатор, принятый в проекте: issue id, ticket id или другой стабильный ключ
 - Один package = одна delivery-единица
+
+## Feature Packages
+
+| ID | Title | Status | Delivery status |
+| --- | --- | --- | --- |
+| [FT-001](FT-001/feature.md) | Загрузка матчей команды CS2 за период | draft | planned |
