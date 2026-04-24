@@ -42,3 +42,9 @@ PRD нужен, когда задача живет на уровне проду�
 ## Template
 
 - Используй шаблон [`../flows/templates/prd/PRD-XXX.md`](../flows/templates/prd/PRD-XXX.md)
+
+## PRD Documents
+
+| ID | Title | Status |
+| --- | --- | --- |
+| [PRD-001](PRD-001-internet-data-acquisition.md) | Internet Data Acquisition | draft |
