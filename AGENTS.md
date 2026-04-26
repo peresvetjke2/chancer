@@ -1,4 +1,4 @@
-See PROJECT.md for project description.
+Прочитай главный индекс Memory Bank: [memory-bank/README.md](memory-bank/README.md)
 
 ## Stack
 Ruby on Rails 8, PostgreSQL, RSpec

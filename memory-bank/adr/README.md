@@ -24,6 +24,10 @@ audience: humans_and_agents
 - Нумерация монотонная и не переиспользуется
 - Заголовок файла должен совпадать с `title` во frontmatter
 
+## Records
+
+- [`ADR-001: CS2 Data Acquisition Source Strategy`](ADR-001-cs2-data-acquisition-source-strategy.md)
+
 ## Statuses
 
 - `proposed` — решение сформулировано, но еще не принято
