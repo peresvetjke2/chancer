@@ -1,9 +1,8 @@
-Улучши ADR в файле `{ADR_PATH}` по результатам review и decision support, сохранив intent автора и формат project documentation.
+Улучши ADR в файле `{ADR_PATH}` по результатам review, сохранив intent автора и формат project documentation.
 
 Входные данные:
 - текущий текст ADR;
-- findings из review;
-- recommendation и evidence gaps из decision support;
+- findings, recommendation и evidence gaps из review;
 - дополнительные факты от автора, если они явно переданы.
 
 Цель:

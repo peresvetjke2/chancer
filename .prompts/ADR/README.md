@@ -19,7 +19,7 @@
 
 ### [`01_review.md`](01_review.md)
 
-Используй, когда нужно провести критичное ревью ADR как документа decision record.
+Используй, когда нужно провести критичное ревью ADR как документа decision record и сразу оценить силу самого решения.
 
 - `Inputs`:
   - `{ADR_PATH}`;
@@ -28,8 +28,10 @@
   - `derived_from` и linked docs, если доступны.
 - `Output`:
   - findings, сгруппированные по категориям `governance`, `structure`, `decision_quality`, `evidence`;
+  - decision summary и evidence matrix по ключевым drivers;
+  - recommendation по самому решению;
   - overall verdict;
-  - JSON с verdict, findings_count и blocking_issues.
+  - JSON с verdict, recommendation, findings_count, blocking_issues и key_gaps.
 - `Preconditions`:
   - ADR-файл существует и читаем;
   - доступен хотя бы template ADR.
@@ -40,40 +42,15 @@
   - отсутствует template/governance source of truth;
   - ссылки в ADR ведут на несуществующие документы.
 - `Gate to next step`:
-  - можно переходить к `02_decision_support.md`, даже если verdict неидеален, но findings должны быть сохранены как вход.
+  - можно переходить к `02_improve.md`, даже если verdict неидеален, но findings, recommendation и evidence gaps должны быть сохранены как вход.
 
-### [`02_decision_support.md`](02_decision_support.md)
+### [`02_improve.md`](02_improve.md)
 
-Используй, когда нужно оценить силу самого решения, а не только качество оформления ADR.
-
-- `Inputs`:
-  - `{ADR_PATH}`;
-  - output шага review, если он есть;
-  - linked docs, на которые ADR опирается.
-- `Output`:
-  - decision summary;
-  - evidence matrix по drivers;
-  - recommendation со строгим статусом;
-  - JSON с recommendation, key_gaps и confidence.
-- `Preconditions`:
-  - ADR содержит хотя бы формулировку предлагаемого решения и decision drivers либо их замену по смыслу.
-- `Can skip when`:
-  - ADR менялся только редакторски, а оценка решения и evidence с прошлого запуска остаются валидными.
-- `Failure modes`:
-  - в ADR не сформулировано само решение;
-  - отсутствуют decision drivers;
-  - ключевые аргументы не подтверждены ничем из входов.
-- `Gate to next step`:
-  - `03_improve.md` использует recommendation, evidence gaps и decision meeting checklist как обязательный вход.
-
-### [`03_improve.md`](03_improve.md)
-
-Используй, когда нужно исправить ADR по findings и decision support, не превращая это в произвольный rewrite.
+Используй, когда нужно исправить ADR по findings review, не превращая это в произвольный rewrite.
 
 - `Inputs`:
   - текущий ADR;
-  - findings из review;
-  - recommendation и evidence gaps из decision support;
+  - findings, recommendation и evidence gaps из review;
   - дополнительные факты от автора, если они явно переданы.
 - `Output`:
   - обновленный текст ADR;
@@ -83,15 +60,15 @@
 - `Preconditions`:
   - есть конкретные findings или decision gaps, которые нужно исправить.
 - `Can skip when`:
-  - review и decision support не выявили изменений, требующих правок ADR.
+  - review не выявил изменений, требующих правок ADR.
 - `Failure modes`:
   - входные замечания противоречат друг другу;
   - для обязательных секций не хватает фактов;
   - requested state = `accepted`, но данные неполны и placeholder недопустим.
 - `Gate to next step`:
-  - `04_apply.md` запускается только на ADR, который либо не содержит unresolved placeholders, либо явно остается в draft/proposed.
+  - `03_apply.md` запускается только на ADR, который либо не содержит unresolved placeholders, либо явно остается в draft/proposed.
 
-### [`04_apply.md`](04_apply.md)
+### [`03_apply.md`](03_apply.md)
 
 Используй, когда нужно определить, какие подтвержденные downstream-изменения следуют из ADR.
 
@@ -120,6 +97,5 @@
 ## Recommended Order
 
 1. `01_review.md`
-2. `02_decision_support.md`
-3. `03_improve.md`
-4. `04_apply.md`
+2. `02_improve.md`
+3. `03_apply.md`
