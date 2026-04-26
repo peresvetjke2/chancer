@@ -26,7 +26,7 @@ audience: humans_and_agents
 
 ## Records
 
-- Сейчас нет активных ADR, которые следует читать как действующие решения.
+- [`ADR-003: PandaScore Free API Attribute Scope`](ADR-003-pandascore-free-api-attribute-scope.md) — `decision_status: proposed`; перечень сущностей и атрибутов PandaScore, допустимых для free plan, с обязательными source links.
 
 ## Archived
 
