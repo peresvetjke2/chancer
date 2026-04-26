@@ -30,6 +30,9 @@ audience: humans_and_agents
 
 ## Archived
 
+AI-агент не имеет право читать эти документы без явного требования пользователя!
+
+- [`ADR-002: CS2 Attribute-Level Source Matrix`](ADR-002-cs2-attribute-source-matrix.md) — архивирован, `decision_status: rejected`; не читать как действующее или рекомендуемое решение.
 - [`ADR-001: CS2 Data Acquisition Source Strategy`](ADR-001-cs2-data-acquisition-source-strategy.md) — архивирован, `decision_status: rejected`; не читать как действующее или рекомендуемое решение.
 
 ## Statuses
