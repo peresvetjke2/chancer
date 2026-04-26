@@ -26,7 +26,11 @@ audience: humans_and_agents
 
 ## Records
 
-- [`ADR-001: CS2 Data Acquisition Source Strategy`](ADR-001-cs2-data-acquisition-source-strategy.md)
+- Сейчас нет активных ADR, которые следует читать как действующие решения.
+
+## Archived
+
+- [`ADR-001: CS2 Data Acquisition Source Strategy`](ADR-001-cs2-data-acquisition-source-strategy.md) — архивирован, `decision_status: rejected`; не читать как действующее или рекомендуемое решение.
 
 ## Statuses
 

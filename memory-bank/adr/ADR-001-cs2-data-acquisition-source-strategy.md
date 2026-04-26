@@ -6,8 +6,8 @@ purpose: "Фиксирует стратегию выбора primary и fallback
 derived_from:
   - ../prd/PRD-001-internet-data-acquisition.md
   - ../domain/cs2-data-attributes.md
-status: draft
-decision_status: proposed
+status: archived
+decision_status: rejected
 date: 2026-04-25
 audience: humans_and_agents
 must_not_define:
@@ -16,6 +16,8 @@ must_not_define:
 ---
 
 # ADR-001: CS2 Data Acquisition Source Strategy
+
+> Архивировано: этот ADR отклонен и не должен использоваться как input для downstream-документов.
 
 ## Контекст
 
