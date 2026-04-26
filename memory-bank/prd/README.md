@@ -48,3 +48,4 @@ PRD нужен, когда задача живет на уровне проду�
 | ID | Title | Status |
 | --- | --- | --- |
 | [PRD-001](PRD-001-internet-data-acquisition.md) | Internet Data Acquisition | draft |
+| [PRD-002](PRD-002-pandascore-data-acquisition.md) | PandaScore Data Acquisition | draft |
