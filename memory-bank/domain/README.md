@@ -16,5 +16,4 @@ audience: humans_and_agents
 - [Frontend](frontend.md) — шаблон описания UI-поверхностей, design system и i18n-слоя. Читать при работе с интерфейсом.
 - [CS2 Data Attributes](cs2-data-attributes.md) — короткий список ключевых атрибутов домена CS2, которые нужно хранить в системе. Читать при проектировании доменной модели и схемы данных.
 - [Project Glossary](glossary.md) — общий глоссарий проекта с preferred русскими названиями рабочих терминов. Читать при выравнивании терминологии в документации.
-- [CS2 Data Sources](cs2-data-sources.md) — каталог источников для загрузки структурированных CS2-данных, их покрытия, ограничений и source priority. Читать при проектировании ingestion-layer и provenance.
 - [Prediction Signals](prediction-signals.md) — каталог сигналов модели прогнозирования: внешние факторы, данные игрока, карты, команды, матча и ставок. Читать при feature-extraction и scoring-логики.

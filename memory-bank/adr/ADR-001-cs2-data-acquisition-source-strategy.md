@@ -5,7 +5,7 @@ doc_function: canonical
 purpose: "Фиксирует стратегию выбора primary и fallback источников для ingestion-layer структурированных CS2-данных."
 derived_from:
   - ../prd/PRD-001-internet-data-acquisition.md
-  - ../domain/cs2-data-sources.md
+  - ../domain/cs2-data-attributes.md
 status: draft
 decision_status: proposed
 date: 2026-04-25
@@ -21,7 +21,7 @@ must_not_define:
 
 `PRD-001` требует зафиксировать для baseline ingestion-layer явные `primary source`, `fallback policy`, правила freshness и provenance по ключевым CS2-категориям: матчи, расписание, турниры, команды, игроки, составы, рейтинги, новости и трансферы.
 
-Reference-список структурированных требований задан в [../domain/cs2-data-sources.md](../domain/cs2-data-sources.md). Для выбора стратегии были повторно проверены актуальные публичные условия основных источников на `2026-04-25`.
+Для выбора стратегии были повторно проверены актуальные публичные условия основных источников на `2026-04-25`.
 
 ### Краткий анализ источников
 
@@ -33,9 +33,9 @@ Reference-список структурированных требований �
 | `Valve Regional Standings` | snapshots VRS, региональные standings, invite semantics, модель рейтинга | история ограничена эпохой VRS и публикациями в репозитории | standings обновляются `periodically` до open qualifiers | официальный и канонический источник для `valve_regional_standings` | не покрывает матчи, ростеры и общую entity-базу; формат данных узкий |
 | `BO3.gg` | матчи, live-статистика, player/team pages, transfers, round-level presentation | глубокая история заявлена на сайте, но без формального API-контракта | live-ориентированное обновление | как сайт удобен для исследования, но интеграция не подтверждена публичной API-документацией | неясны pricing, rate limits, легальность массового использования и устойчивость доступа; по рискам близок к scraping-source |
 
-### Сопоставление покрытия с `cs2-data-sources.md`
+### Сопоставление покрытия по категориям ingestion
 
-Категории взяты из `Recommended Source Priority` и соседних разделов файла [../domain/cs2-data-sources.md](../domain/cs2-data-sources.md): `matches/schedule`, `tournaments/bracket`, `teams/players`, `tournament rosters`, `HLTV ranking`, `Valve VRS`, `membership history / transfers`, `veto`, `round history`.
+Категории для сравнения: `matches/schedule`, `tournaments/bracket`, `teams/players`, `tournament rosters`, `HLTV ranking`, `Valve VRS`, `membership history / transfers`, `veto`, `round history`.
 
 | Источник | Полностью закрывает | Частично закрывает | Не закрывает |
 | --- | --- | --- | --- |
@@ -123,7 +123,7 @@ Fallback-план:
 
 ## Follow-up
 
-- Оформить feature-level source priority matrix по категориям из `cs2-data-sources.md`.
+- Оформить feature-level source priority matrix по ключевым категориям ingestion.
 - Зафиксировать verify-контракт на provenance, freshness и partial ingestion result.
 - Отдельно решить источник для news ingestion.
 - Отдельно подтвердить коммерческую и юридическую применимость `PandaScore` и `Liquipedia` для use-case проекта до production rollout.
@@ -131,12 +131,18 @@ Fallback-план:
 ## Связанные ссылки
 
 - [PRD-001: Internet Data Acquisition](../prd/PRD-001-internet-data-acquisition.md)
-- [CS2 Data Sources](../domain/cs2-data-sources.md)
 - [CS2 Data Attributes](../domain/cs2-data-attributes.md)
 - [PandaScore pricing](https://www.pandascore.co/pricing)
 - [PandaScore tournaments in-depth](https://developers.pandascore.co/docs/tournaments-in-depth)
 - [PandaScore CS rounds endpoint](https://developers.pandascore.co/reference/get_csgo_games_csgogameid_rounds-1)
 - [Liquipedia API Terms of Use](https://liquipedia.net/api-terms-of-use)
 - [Liquipedia API](https://liquipedia.net/api)
+- [Liquipedia Counter-Strike main page](https://liquipedia.net/counterstrike/Main_Page)
 - [Valve Regional Standings repository](https://github.com/ValveSoftware/counter-strike_regional_standings)
+- [Valve Major Supplemental Rulebook](https://github.com/ValveSoftware/counter-strike_rules_and_regs/blob/main/major-supplemental-rulebook.md)
 - [HLTV Terms of Service](https://www.hltv.org/terms)
+- [HLTV team page example with ranking and roster timeline](https://www.hltv.org/team/12457/rounds)
+- [HLTV stats pages](https://www.hltv.org/stats)
+- [HLTV map/veto stats example](https://www.hltv.org/stats/teams/maps/10717/veto?csVersion=CS2)
+- [PandaScore Introduction](https://developers.pandascore.co/docs/introduction)
+- [PandaScore FAQ](https://developers.pandascore.co/docs/frequently-asked-questions)
