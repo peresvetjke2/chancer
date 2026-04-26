@@ -19,7 +19,7 @@ must_not_define:
 
 ## Контекст
 
-`PRD-001` требует зафиксировать для baseline ingestion-layer явные `primary source`, `fallback policy`, правила freshness и provenance по ключевым CS2-категориям: матчи, расписание, турниры, команды, игроки, составы, рейтинги, новости и трансферы.
+`PRD-001` требует зафиксировать для baseline ingestion-layer явные `primary source`, `fallback policy`, правила freshness и provenance по ключевым CS2 `entity families`: матчи, расписание, турниры, команды, игроки, составы, рейтинги, новости и трансферы.
 
 Для выбора стратегии были повторно проверены актуальные публичные условия основных источников на `2026-04-25`.
 
@@ -33,9 +33,9 @@ must_not_define:
 | `Valve Regional Standings` | snapshots VRS, региональные standings, invite semantics, модель рейтинга | история ограничена эпохой VRS и публикациями в репозитории | standings обновляются `periodically` до open qualifiers | официальный и канонический источник для `valve_regional_standings` | не покрывает матчи, ростеры и общую entity-базу; формат данных узкий |
 | `BO3.gg` | матчи, live-статистика, player/team pages, transfers, round-level presentation | глубокая история заявлена на сайте, но без формального API-контракта | live-ориентированное обновление | как сайт удобен для исследования, но интеграция не подтверждена публичной API-документацией | неясны pricing, rate limits, легальность массового использования и устойчивость доступа; по рискам близок к scraping-source |
 
-### Сопоставление покрытия по категориям ingestion
+### Сопоставление покрытия по `entity families` ingestion
 
-Категории для сравнения: `matches/schedule`, `tournaments/bracket`, `teams/players`, `tournament rosters`, `HLTV ranking`, `Valve VRS`, `membership history / transfers`, `veto`, `round history`.
+`Entity families` для сравнения: `matches/schedule`, `tournaments/bracket`, `teams/players`, `tournament rosters`, `HLTV ranking`, `Valve VRS`, `membership history / transfers`, `veto`, `round history`.
 
 | Источник | Полностью закрывает | Частично закрывает | Не закрывает |
 | --- | --- | --- | --- |
@@ -45,7 +45,7 @@ must_not_define:
 | `Valve Regional Standings` | `Valve VRS` | none | `matches/schedule`, `tournaments/bracket`, `teams/players`, `tournament rosters`, `HLTV ranking`, `membership history / transfers`, `veto`, `round history` |
 | `BO3.gg` | none | `matches/schedule`, `tournaments/bracket`, `teams/players`, `membership history / transfers`, `round history` | `tournament rosters`, `HLTV ranking`, `Valve VRS`, `veto` |
 
-Главный вывод исследования: ни один источник в одиночку не закрывает baseline без критичных пробелов. Единственная practical foundation-комбинация для первого этапа: `PandaScore + Valve`, с опциональным `HLTV` и `Liquipedia` для узких категорий, где baseline API не хватает глубины.
+Главный вывод исследования: ни один источник в одиночку не закрывает baseline без критичных пробелов. Единственная practical foundation-комбинация для первого этапа: `PandaScore + Valve`, с опциональным `HLTV` и `Liquipedia` для узких `entity families`, где baseline API не хватает глубины.
 
 ## Драйверы решения
 
@@ -53,6 +53,7 @@ must_not_define:
 - Для `TRS-03 = valve_regional_standings` нужен официальный source-of-truth, а не агрегатор.
 - Для матчей, турниров, команд, игроков и roster participation нужен документированный API с повторяемым ingestion.
 - Для `MEM-*`, `transfers` и `VTO-*` допустим enrichment-path, но он не должен блокировать baseline ingestion.
+- Нужна явная граница между guaranteed phase-1 `entity families` и conditional расширениями, чтобы delivery-gates не зависели от оценочных формулировок.
 - Нужно минимизировать юридический и операционный риск для betting-adjacent продукта.
 
 ## Рассмотренные варианты
@@ -75,19 +76,39 @@ must_not_define:
 - `Liquipedia` использовать только как `optional approved source` для `membership history / transfers` и identity-resolution support, если юридически и коммерчески доступ подтвержден.
 - `BO3.gg` не включать в canonical priority list первого этапа; держать только как резервный research candidate на случай, если later-stage потребуются round-level данные без приемлемого доступа у `PandaScore`.
 
+### Scope contract для phase 1
+
+Этот ADR фиксирует точный критерий, который в `PRD-001` был оставлен как conditional rule для `tournaments/maps/veto`. Для delivery-gates phase 1 используется следующая рамка:
+
+| Пакет phase 1 | `Entity families` | Статус в phase 1 | Правило включения |
+| --- | --- | --- | --- |
+| `Guaranteed baseline package` | `teams`, `players`, `matches/schedule`, `tournaments/bracket`, `tournament rosters`, `team ranking snapshots` с обязательной поддержкой `TRS-03 = valve_regional_standings` | обязательно | входит в definition of done phase 1 без дополнительных условий |
+| `Conditional extension package` | `maps`, `veto` | условно | входит в phase 1 только если проходит `API-ingestion simplicity gate`, зафиксированный ниже |
+| `Optional enrichment package` | `membership history / transfers`, `HLTV ranking` | желательно, но не блокирует baseline launch | может быть доставлен в phase 1 или после него отдельным slice |
+
+`API-ingestion simplicity gate` считается пройденным только если одновременно выполнены все условия:
+
+1. Для `entity family` существует документированный API-источник с повторяемым доступом без обязательного HTML scraping как единственного пути.
+2. Этот источник покрывает минимальный `canonical attributes` set, достаточный для storage-модели из `CS2 Data Attributes`.
+3. Интеграция не требует live-only или enterprise-only договорённостей, без которых ingestion не может быть воспроизведён в baseline-режиме.
+4. Для данных можно зафиксировать `primary source`, допустимый fallback и provenance semantics без ad hoc ручной интерпретации на каждом run.
+
+Если хотя бы одно из условий не выполнено, `maps` и `veto` не входят в definition of done phase 1 и оформляются как отдельный downstream slice.
+
 Как планируем использовать выбранные источники:
 
 - canonical entity bootstrap и регулярные обновления матчей строятся вокруг `PandaScore`;
 - VRS snapshots хранятся отдельно, без попытки нормализовать их как производные от стороннего рейтинга;
 - данные из `HLTV` и `Liquipedia` всегда сохраняются как source-scoped snapshots с provenance и не считаются uncontested truth без source-priority rules;
-- `MEM-*`, `transfers` и `VTO-*` считаются enrichment-категориями первого этапа, а не blocker для baseline launch;
+- `MEM-*`, `transfers` и `HLTV ranking` считаются optional enrichment `entity families` первого этапа, а не blocker для baseline launch;
+- `VTO-*` относится к conditional extension package и становится частью phase 1 только при прохождении `API-ingestion simplicity gate`;
 - новости не входят в рекомендуемую source-комбинацию этого ADR и должны быть оформлены отдельным downstream-решением.
 
 Fallback-план:
 
 - если недоступен `PandaScore`, baseline-сбор матчей и турниров временно деградирует до partial mode: `Liquipedia` для tournament/match context и `HLTV` для schedule/result sanity check, без обещания полной консистентности;
 - если недоступен `Valve`, last known VRS snapshots сохраняются read-only до восстановления официального источника;
-- если недоступен `HLTV`, отключаются только enrichment pipelines `HLTV ranking` и `veto`, без остановки baseline ingestion;
+- если недоступен `HLTV`, отключаются только enrichment pipelines `HLTV ranking` и conditional `veto`, без остановки baseline ingestion;
 - если `Liquipedia` не дает approval или блокирует доступ, membership-history остается частично неполной до появления другого approved source.
 
 ## Последствия
@@ -96,17 +117,18 @@ Fallback-план:
 
 - Первый этап получает устойчивый foundation на документированном API, а не на scraping-first подходе.
 - `Valve` фиксируется как канонический источник для VRS, что убирает ambiguity по `TRS-03`.
+- ADR теперь явно разделяет guaranteed baseline, conditional extension и optional enrichment packages, так что phase-1 delivery-gates не зависят от оценочных формулировок.
 - Gaps по `veto`, `membership history` и `round history` отделяются от baseline и не тормозят запуск ingestion-layer.
 
 ### Отрицательные
 
-- Появляется multi-source orchestration и необходимость per-category conflict resolution.
+- Появляется multi-source orchestration и необходимость per-`entity family` conflict resolution.
 - `HLTV` и `Liquipedia` нельзя считать гарантированно доступными production-сигналами.
 - Для полной глубины исторических и round-level данных возможны заметные recurring costs у `PandaScore`.
 
 ### Нейтральные / организационные
 
-- Downstream feature packages должны явно фиксировать category-level source priority.
+- Downstream feature packages должны явно фиксировать source priority по `entity families` и `canonical attributes`.
 - Для каждого ingestion job нужно хранить provenance, freshness и `complete/partial/failed` статус.
 - Membership-history и veto нужно проектировать как optional feature slices с отдельной verify-логикой.
 
@@ -120,6 +142,8 @@ Fallback-план:
   Mitigation: считать ее optional integration и не завязывать на нее canonical baseline.
 - Риск: идентичности команд и игроков разойдутся между источниками.
   Mitigation: сразу проектировать source mapping и identity resolution как отдельный downstream capability.
+- Риск: downstream-команды будут по-разному трактовать, входит ли `maps/veto` в phase 1.
+  Mitigation: считать этот вопрос закрытым данным ADR; delivery-gates опираются на таблицу phase-1 packages и `API-ingestion simplicity gate`, а не на свободную интерпретацию PRD.
 
 ## Follow-up
 
