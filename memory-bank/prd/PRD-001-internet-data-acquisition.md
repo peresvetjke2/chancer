@@ -88,7 +88,7 @@ must_not_define:
 - `BR-07` `HLTV` и аналогичные HTML/navigation sources допустимы только как `optional enrichment`, не могут быть `primary source` для baseline-сущностей и не должны переопределять canonical значения из официальных или документированных API-источников.
 - `BR-08` Для enrichment-доступа к `HLTV` и аналогичным источникам обязателен узкий allowlist страниц, агрессивное кеширование, низкая частота запросов и hard stop при `403`, `429`, CAPTCHA/challenge или ином признаке bot protection.
 - `BR-09` Частично успешный сбор допустим, если система умеет явно отделять `complete`, `partial` и `failed` result по источнику или категории. Операционные semantics, обязательные attribute sets и thresholds для этих статусов формализуются отдельным ADR.
-- `BR-10` Инициатива должна завершиться не только research-результатом, но и работающей реализацией capability хотя бы для минимально достаточного baseline-набора категорий данных.
+- `BR-10` Инициатива должна завершиться не только research-результатом, но и работающей реализацией acquisition capability, включающей как baseline ingestion для обязательных структурированных данных, так и controlled enrichment-path для согласованного `HLTV` scope с provenance, ограничениями доступа и явной degradation semantics.
 - `BR-11` Baseline capability обязана поддерживать canonical identity layer и source-to-canonical mapping минимум для `team`, `player` и `tournament`; реализация, в которой baseline-ingestion работает без этого слоя, не считается достаточной.
 - `BR-12` Данные, доступные только на платных или live/historical планах внешнего API, а также поля без проверяемого документированного подтверждения, не входят в baseline-контракт.
 
@@ -104,11 +104,11 @@ must_not_define:
 
 ## Risks And Open Questions
 
-- `RISK-01` Даже optional enrichment-источники могут оказаться нестабильными или недопустимыми из-за anti-bot защиты, rate limits и юридических ограничений.
+- `RISK-01` Даже optional enrichment-источники могут оказаться нестабильными или недопустимыми из-за anti-bot защиты, rate limits ограничений.
 - `RISK-02` Разные источники могут давать несовместимые идентификаторы, таймзоны, naming conventions, разные semantics дат membership и разную степень детализации.
 - `RISK-03` Попытка включить в baseline неподтверждённые или paid-only API поля размоет контракт и приведёт к ложным продуктовым обещаниям.
 - `RISK-04` Попытка покрыть слишком много enrichment-сценариев сразу может размыть baseline scope и затормозить доставку capability.
-- `OQ-01` Какие optional enrichment slices действительно нужны в первом продуктовом контуре после baseline: `HLTV ranking`, `membership history`, `veto/map tendency` или только их часть?
+- `OQ-01` Какой именно согласованный `HLTV` scope должен войти в обязательный controlled enrichment-path этой инициативы?
 - `OQ-02` Какой уровень near-real-time freshness действительно нужен для разных категорий данных: матчи, ростеры, rankings и связанные structured entities?
 - `OQ-03` Понадобится ли отдельное решение по paid historical/live data, или baseline free/API scope достаточен для целевой аналитики первого релиза?
 
