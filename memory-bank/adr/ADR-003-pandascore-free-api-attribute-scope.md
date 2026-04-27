@@ -6,7 +6,7 @@ purpose: "Фиксирует перечень сущностей и атрибу
 derived_from:
   - ../prd/PRD-002-pandascore-data-acquisition.md
 status: draft
-decision_status: proposed
+decision_status: approved
 date: 2026-04-26
 audience: humans_and_agents
 must_not_define:

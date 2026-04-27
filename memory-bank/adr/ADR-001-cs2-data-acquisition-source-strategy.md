@@ -7,7 +7,7 @@ derived_from:
   - ../prd/PRD-001-internet-data-acquisition.md
   - ../domain/cs2-data-attributes.md
 status: archived
-decision_status: rejected
+decision_status: approved
 date: 2026-04-25
 audience: humans_and_agents
 must_not_define:
