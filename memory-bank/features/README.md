@@ -32,3 +32,4 @@ audience: humans_and_agents
 | ID | Title | Status | Delivery status |
 | --- | --- | --- | --- |
 | [FT-001](FT-001/feature.md) | Загрузка матчей команды CS2 за период | draft | planned |
+| [FT-008](FT-008/feature.md) | Baseline Coverage PandaScore по сущностям, атрибутам и freshness expectations | draft | planned |

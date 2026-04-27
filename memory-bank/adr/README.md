@@ -26,6 +26,7 @@ audience: humans_and_agents
 
 ## Records
 
+- [`ADR-004: HLTV Enrichment And Controlled Acquisition Strategy`](ADR-004-hltv-enrichment-and-controlled-acquisition-strategy.md) — `decision_status: proposed`; описывает enrichment potential HLTV сверх PandaScore baseline, а также policy и stop-conditions для любого машинного доступа.
 - [`ADR-003: PandaScore Free API Attribute Scope`](ADR-003-pandascore-free-api-attribute-scope.md) — `decision_status: proposed`; перечень сущностей и атрибутов PandaScore, допустимых для free plan, с обязательными source links.
 
 ## Archived
