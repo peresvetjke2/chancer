@@ -116,8 +116,9 @@ must_not_define:
 
 | Feature | Why it exists | Status |
 | --- | --- | --- |
-| `FT-003` | Каталог интернет-источников и capability-правила: baseline-vs-enrichment classification, source-selection policy, freshness, provenance | planned |
-| `FT-004` | Ingestion pipeline для documentable API-baseline по `matches/schedule`, `teams`, `players`, `tournaments` и `tournament rosters` | planned |
-| `FT-005` | Controlled enrichment pipeline для узких HTML/navigation sources без scraping-first зависимости baseline | planned |
-| `FT-006` | Нормализация, conflict resolution и identity mapping между canonical baseline и optional enrichment-источниками | planned |
-| `FT-007` | Операционный контур запуска, контроля качества и повторных обновлений данных | planned |
+| [FT-008](../features/FT-008/feature.md) | Зафиксировать baseline coverage PandaScore по сущностям, атрибутам и freshness expectations, чтобы downstream ingestion не принимал product decisions ad hoc | draft |
+| `FT-009` | Реализовать baseline ingestion для документированного API-scope: `matches/schedule`, `teams`, `players`, `tournaments/bracket context`, `tournament rosters` и связанных справочников | planned |
+| `FT-010` | Ввести canonical identity layer и source-to-canonical mapping для `team`, `player` и `tournament`, чтобы multi-source acquisition не смешивал сущности и мог разрешать конфликты предсказуемо | planned |
+| `FT-011` | Зафиксировать и реализовать verify/data-quality слой для provenance, freshness, `complete/partial/failed` semantics и conflict resolution по baseline capability | planned |
+| `FT-012` | Добавить baseline-ingestion и storage contract для `Valve Regional Standings` как отдельного canonical source для ranking snapshots и invite-related context | planned |
+| `FT-013` | Доставить controlled optional enrichment-path для `HLTV ranking`, roster snapshots, membership history / transfers и `veto` / map-tendency signals с allowlist, caching и hard-stop degradation semantics | planned |
